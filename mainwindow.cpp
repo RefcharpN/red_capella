@@ -61,12 +61,57 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
 
-    //индекс по букве
-    auto itObj = std::find_if(table.begin(), table.end(),[](CharTable o) { return o.chr == "U"; });
-    if (itObj != table.end())
+    //первое наложение шифра
+    QString toCode = "HITLERSTANDARTEINWARSCHAU";//выбор из файла
+    QByteArray wordBa;
+    wordBa = toCode.toUtf8();
+    QList<int> exitBa;
+
+    for(auto item: wordBa)
     {
-        //qDebug() << itObj->pos_up;
+        auto itObj = std::find_if(table.begin(), table.end(),[item](CharTable o) { return o.chr == QString(item); });
+        if (itObj != table.end())
+        {
+            exitBa.append(itObj->pos_up);
+            exitBa.append(itObj->pos_down);
+        }
     }
+    qDebug() << exitBa << "исходное сообщение";
+
+
+    //перевод кодовой фразы в цифры
+    QString phrase = "DOKUMENTARFILMESINDBELEGTWERDENABERRASCHWIEDERFREI";//выбор из файла
+    QByteArray phrasedBa;
+    phrasedBa = phrase.toUtf8();
+    QList<int> exitPhrase;
+
+    for(auto item: phrasedBa)
+    {
+        auto itObj = std::find_if(table.begin(), table.end(),[item](CharTable o) { return o.chr == QString(item); });
+        if (itObj != table.end())
+        {
+            exitPhrase.append(itObj->pos_up);
+        }
+    }
+    qDebug() << exitPhrase << "кодовая фраза";
+
+
+    //второе наложение
+    QList<int> finalCode;
+    int count = 0;
+    for(auto item: exitBa)
+    {
+        if(count == exitPhrase.length())
+        {
+            count = 0;
+        }
+        finalCode.append((item + exitPhrase.at(count)) % 10);
+        count++;
+
+    }
+    qDebug() << finalCode << "результат шифра";
+
+
 
 
 
