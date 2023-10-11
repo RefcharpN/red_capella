@@ -50,6 +50,18 @@ MainWindow::MainWindow(QWidget *parent)
     QList<int> phraseEncoded = this->phraseEncode(table, phrase);
 
     QList<int> finalEncoded = this->secondEncode(first, phraseEncoded);
+
+
+    //перевод списка в строку
+    QString s = "";
+
+    for (auto &value : finalEncoded)
+    {
+        s += QString("%1").arg(value);
+    }
+
+    qDebug() << s;
+
 }
 
 MainWindow::~MainWindow()
